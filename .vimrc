@@ -1,14 +1,10 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-if &term!="xterm"
-  set t_Co=256            " use 256 colors in vim
-  colorscheme fu   " an appropriate color scheme
-endif
-
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+Bundle 'fu'
 Bundle 'scrooloose/nerdtree'
 Bundle 'ddollar/nerdcommenter'
 Bundle 'ervandew/supertab'
@@ -108,6 +104,11 @@ set foldcolumn=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+if &term!="xterm"
+  set t_Co=256            " use 256 colors in vim
+  colorscheme fu   " an appropriate color scheme
+endif
 
 syntax enable
 " Set utf8 as standard encoding and en_US as the standard language
@@ -245,7 +246,7 @@ iab xdate <c-r>=strftime("%d/%m/%y %H:%M:%S")<cr>
 " Turn persistent undo on 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 try
-  set undodir=~/.vim/temp/undos
+  set undodir=~/.dotfiles/temp/undos
   set undofile
 catch
 endtry
