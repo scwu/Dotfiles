@@ -37,8 +37,9 @@ filetype indent on     " required!
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" Fast saving
+" Fast saving and exiting
 nmap <leader>w :w!<cr>
+nmap <leader>q :q<cr>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
