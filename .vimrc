@@ -1,10 +1,14 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
+" non standard bash
+set shell=/bin/sh
+
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'fu'
+Bundle 'jelera/vim-javascript-syntax'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'scrooloose/nerdtree'
@@ -324,11 +328,61 @@ endtry
 let g:yankring_history_dir = '~/.dotfiles/temp/'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerd Tree
+" => NERDTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>n :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark 
 map <leader>nf :NERDTreeFind<cr>
+
+let NERDTreeIgnore=['\.pyc$', '\.pyo$', '\.rbc$', '\.rbo$', '\.class$', '\.o$', '\~$']
+ 
+" If the parameter is a directory, cd into it
+function s:CdIfDirectory(directory)
+  let explicitDirectory = isdirectory(a:directory)
+  let directory = explicitDirectory || empty(a:directory)
+  
+  if explicitDirectory
+    exe "cd " . fnameescape(a:directory)
+  endif
+  
+  " Allows reading from stdin
+  " ex: git diff | mvim -R -
+  if strlen(a:directory) == 0
+    return
+  endif
+  
+  if directory
+    NERDTree
+    wincmd p
+    bd
+  endif
+  
+  if explicitDirectory
+    wincmd p
+  endif
+endfunction
+
+" NERDTree utility function
+function s:UpdateNERDTree(...)
+  let stay = 0
+
+  if(exists("a:1"))
+    let stay = a:1
+  end
+
+  if exists("t:NERDTreeBufName")
+    let nr = bufwinnr(t:NERDTreeBufName)
+    if nr != -1
+      exe nr . "wincmd w"
+      exe substitute(mapcheck("R"), "<CR>", "", "")
+      if !stay
+        wincmd p
+      end
+    endif
+  endif
+endfunction
+
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -350,5 +404,27 @@ let g:ctrlp_custom_ignore = {
 " NERDCommenter 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map <leader>/ <plug>NERDCommenterToggle<CR>
-imap <leader> <Esc><plug>NERDCommenterToggle<CR>i 
+map <leader>c <plug>NERDCommenterToggle<CR>
+imap <leader>c <Esc><plug>NERDCommenterToggle<CR>i 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tagbar 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>rt :TagbarToggle<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fugitive 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>gb :Gblame<CR>
+map <leader>gs :Gstatus<CR>
+map <leader>gd :Gdiff<CR>
+map <leader>gl :Glog<CR>
+map <leader>gc :Gcommit<CR>
+map <leader>gp :Git push<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ZoomWin 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>z :ZoomWin<CR>
+
+

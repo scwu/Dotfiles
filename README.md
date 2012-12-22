@@ -6,6 +6,7 @@ bash
 
 # Installation
 ## vim
+    sudo apt-get install exuberant-ctags # needed for tagbar
     git clone git@github.com:antigoliath/.dotfiles.git
     ln -s .dotfiles/.vimrc .vimrc
     ln -s .dotfiles/.bashrc .bashrc
