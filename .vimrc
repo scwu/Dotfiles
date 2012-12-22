@@ -5,6 +5,8 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'fu'
+Bundle 'kien/ctrlp.vim'
+Bundle 'mileszs/ack.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'ddollar/nerdcommenter'
 Bundle 'ervandew/supertab'
@@ -19,7 +21,6 @@ Bundle 'jeetsukumaran/vim-buffergator'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'groenewege/vim-less'
 Bundle 'cakebaker/scss-syntax.vim'
-Bundle 'vim-scripts/YankRing.vim'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -45,16 +46,21 @@ set so=3
 " Turn on the WiLd menu
 set wildmenu
 
-" Ignore compiled files
-" set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-else
-  set wildignore+=.git\*,.hg\*,.svn\*
-endif
+" Disable output and VCS files
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem
+
+" Disable archive files
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
+
+" Ignore bundler and sass cache
+set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*
+
+" Disable temp and backup files
+set wildignore+=*.swp,*~,._*
 
 "Always show current position
 set ruler
+set number
 
 " Height of the command bar
 set cmdheight=2
@@ -112,7 +118,7 @@ endif
 
 syntax enable
 " Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+set encoding=utf-8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac"
@@ -145,19 +151,39 @@ set expandtab
 set smarttab
 
 " 1 tab == 4 spaces
-set shiftwidth=4
+set shiftwidth=2
 set tabstop=2
 
 " Linebreak on 500 characters
 set lbr
 set tw=500
 
-set ai "Auto indent
-set si "Smart indent
+set autoindent "Auto indent
+set smartindent "Smart indent
 set wrap "Wrap lines
 
 " remove tabs when pasting
-set paste
+set pastetoggle=<F2>
+
+" upper/lower word
+nmap <leader>u mQviwU`Q
+nmap <leader>l mQviwu`Q
+
+" upper/lower first char of word
+nmap <leader>U mQgewvU`Q
+nmap <leader>L mQgewvu`Q
+
+" Swap two words
+nmap <silent> gw :s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR>`'
+
+" Underline the current line with '='
+nmap <silent> <leader>ul :t.<CR>Vr=
+
+" set text wrapping toggles
+nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
+
+" find merge conflict markers
+nmap <silent> <leader>fc <ESC>/\v^[<=>]{7}( .*\|$)<CR>
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -189,9 +215,30 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+" Map Control-# to switch tabs
+map  <C-0> 0gt
+imap <C-0> <Esc>0gt
+map  <C-1> 1gt
+imap <C-1> <Esc>1gt
+map  <C-2> 2gt
+imap <C-2> <Esc>2gt
+map  <C-3> 3gt
+imap <C-3> <Esc>3gt
+map  <C-4> 4gt
+imap <C-4> <Esc>4gt
+map  <C-5> 5gt
+imap <C-5> <Esc>5gt
+map  <C-6> 6gt
+imap <C-6> <Esc>6gt
+map  <C-7> 7gt
+imap <C-7> <Esc>7gt
+map  <C-8> 8gt
+imap <C-8> <Esc>8gt
+map  <C-9> 9gt
+imap <C-9> <Esc>9gt
 
-
-
+" Adjust viewports to the same size
+map <Leader>= <C-w>=
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -237,6 +284,17 @@ inoremap ' ''<esc>i
 inoremap " ""<esc>i
 inoremap < <><esc>i
 
+if has("statusline") && !&cp
+  set laststatus=2  " always show the status bar
+
+  " Start the status line
+  set statusline=%f\ %m\ %r
+  set statusline+=Line:%l/%L[%p%%]
+  set statusline+=Col:%v
+  set statusline+=Buf:#%n
+  set statusline+=[%b][0x%B]
+endif
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General abbreviations
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -256,3 +314,41 @@ endtry
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" set omnifunc=syntaxcomplete#Complete
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""
+" => YankRing
+""""""""""""""""""""""""""""""
+let g:yankring_history_dir = '~/.dotfiles/temp/'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerd Tree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>n :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark 
+map <leader>nf :NERDTreeFind<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CtrlP
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_max_height = 20
+map <C-p> :CtrlP<CR>
+imap <C-p> <ESC>:CtrlP<CR>
+
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|swp|o)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDCommenter 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+map <leader>/ <plug>NERDCommenterToggle<CR>
+imap <leader> <Esc><plug>NERDCommenterToggle<CR>i 
