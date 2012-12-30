@@ -26,6 +26,10 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'groenewege/vim-less'
 Bundle 'cakebaker/scss-syntax.vim'
 
+Bundle 'nono/vim-handlebars'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'godlygeek/tabular'
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General
@@ -260,6 +264,7 @@ func! DeleteTrailingWS()
 endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
+map <leader>; A;<ESC>
 
 
 
@@ -427,5 +432,22 @@ map <leader>gp :Git push<CR>
 " ZoomWin 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <leader>z :ZoomWin<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tabular
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader=','
+if exists(":Tabularize")
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:\zs<CR>
+  vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" BufferGator
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <Leader>g :BuffergatorToggle
 
 
