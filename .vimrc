@@ -26,7 +26,7 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'groenewege/vim-less'
 Bundle 'cakebaker/scss-syntax.vim'
 
-Bundle 'hynek/vim-python-pep8-indent'
+Bundle 'klen/python-mode'
 Bundle 'nono/vim-handlebars'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'godlygeek/tabular'
