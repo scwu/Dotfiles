@@ -289,7 +289,7 @@ cnoremap <C-N> <Down>
 inoremap ( ()<esc>i
 inoremap [ []<esc>i
 inoremap { {}<esc>i
-inoremap {<CR> {<esc>o}<esc>O
+inoremap {<CR> {<CR>}<esc>O
 inoremap ' ''<esc>i
 inoremap " ""<esc>i
 inoremap < <><esc>i
