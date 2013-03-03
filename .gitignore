@@ -1,3 +1,4 @@
 .vim/*
-temp/
+temp/*
+temp/**/*
 

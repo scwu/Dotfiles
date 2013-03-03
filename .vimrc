@@ -287,13 +287,13 @@ cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
 
 " Map auto complete of (, ", ', [
-inoremap ( ()<esc>i
-inoremap [ []<esc>i
-inoremap { {}<esc>i
-inoremap {<CR> {<CR>}<esc>O
-inoremap ' ''<esc>i
-inoremap " ""<esc>i
-inoremap < <><esc>i
+" inoremap ( ()<esc>i
+" inoremap [ []<esc>i
+" inoremap { {}<esc>i
+" inoremap {<CR> {<CR>}<esc>O
+" inoremap ' ''<esc>i
+" inoremap " ""<esc>i
+" inoremap < <><esc>i
 
 if has("statusline") && !&cp
   set laststatus=2  " always show the status bar
@@ -402,7 +402,7 @@ map <C-p> :CtrlP<CR>
 imap <C-p> <ESC>:CtrlP<CR>
 
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$|node_modules',
   \ 'file': '\v\.(exe|so|dll|swp|o)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
@@ -427,7 +427,8 @@ map <leader>gs :Gstatus<CR>
 map <leader>gd :Gdiff<CR>
 map <leader>gl :Glog<CR>
 map <leader>gc :Gcommit<CR>
-map <leader>gp :Git push<CR>
+map <leader>gP :Git pull
+map <leader>gp :Git push
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ZoomWin 
@@ -449,7 +450,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BufferGator
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <Leader>g :BuffergatorToggle
+nmap <leader>b :BuffergatorToggle<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
