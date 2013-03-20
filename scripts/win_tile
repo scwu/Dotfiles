@@ -13,6 +13,66 @@ WINDOW_DECORATION=$((10)) # Set the window decoration border according to the th
 
 #############################################  /CONFIGURATION   #############################################
 
+
+#################### OPENBOX KEYBINDGINS
+     # <keybind key="W-0x0060">
+     #   <action name="Maximize"/>
+     #   <action name="Execute">
+     #     <execute>~/scripts/win_tile -m</execute>
+     #   </action>
+     #   <monitor>1</monitor>
+     # </keybind>
+     # <keybind key="W-Tab">
+     #   <action name="Left"/>
+     #   <action name="Execute">
+     #     <execute>~/scripts/win_tile -l</execute>
+     #   </action>
+     #   <monitor>1</monitor>
+     # </keybind>
+     # <keybind key="W-1">
+     #   <action name="Top"/>
+     #   <action name="Execute">
+     #     <execute>~/scripts/win_tile -t</execute>
+     #   </action>
+     #   <monitor>1</monitor>
+     # </keybind>
+     # <keybind key="W-q">
+     #   <action name="Bottom"/>
+     #   <action name="Execute">
+     #     <execute>~/scripts/win_tile -b</execute>
+     #   </action>
+     #   <monitor>1</monitor>
+     # </keybind>
+     # <keybind key="W-w">
+     #   <action name="Right"/>
+     #   <action name="Execute">
+     #     <execute>~/scripts/win_tile -r</execute>
+     #   </action>
+     #   <monitor>1</monitor>
+     # </keybind>
+     # <!-- <keybind key="C-A-0x4f">-->
+     # <!--   <action name="UnmaximizeFull"/>-->
+     # <!--   <action name="Execute">-->
+     # <!--     <execute>~/scripts/win_tile -tl</execute>-->
+     # <!--   </action>-->
+     # <!--   <monitor>1</monitor>-->
+     # <!-- </keybind>-->
+     # <!-- <keybind key="C-A-0x51">-->
+     # <!--   <action name="UnmaximizeFull"/>-->
+     # <!--   <action name="Execute">-->
+     # <!--     <execute>~/scripts/win_tile -tr</execute>-->
+     # <!--   </action>-->
+     # <!--   <monitor>1</monitor>-->
+     # <!-- </keybind>-->
+     # <!-- <keybind key="C-A-0x57">-->
+     # <!--   <action name="UnmaximizeFull"/>-->
+     # <!--   <action name="Execute">-->
+     # <!--     <execute>~/scripts/win_tile -bl</execute>-->
+####################
+
+
+
+
 # Print help:
 printUsage ()
 {
