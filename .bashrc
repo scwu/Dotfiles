@@ -4,7 +4,7 @@ else export TERM=xterm-color
 fi
 
 # globals
-export EC2='ubuntu@ec2-50-19-65-30.compute-1.amazonaws.com'
+export EC2='ubuntu@184.73.248.188'
 
 # navigation aliases
 alias cd='cd_ls'
@@ -16,6 +16,7 @@ alias ..='cd ..'
 alias ...='cd ../../../'
 alias ....='cd ../../../../'
 alias .....='cd ../../../../'
+alias sl='sl -al'
 
 # ssh
 alias labs='ssh davidxu@pennapps.com'
@@ -54,8 +55,17 @@ alias uninstall='sudo apt-get rm'
 alias update='sudo apt-get update'
 
 # funny stuff
-alias echo='cowsay'
+alias ecco='cowsay_echo'
 
+
+function cowsay_echo(){
+  # edge case
+  if [ "$#" -eq 0 ]; then
+    cowsay ' '
+  else 
+    cowsay $@
+  fi
+}
 
 # have it show it after changing
 function cd_ls(){
@@ -71,13 +81,12 @@ function seasprint() {
 blockfb() {
     if [ -f /etc/hosts-fb ]; then # Facebook is blocked 
         read -sp "Are you sure you want to unblock Facebook? " response
-        if [ $response != "YesI'mfucking*positive*" ]; then
-            echo; echo "Sorry, I guess you're not sure."
-        else
-            echo
+        # if [ $response != "YesI'mfucking*positive*" ]; then
+        #     echo "Sorry, I guess you're not sure."
+        # else
             sudo mv /etc/hosts-fb /etc/hosts
             echo "Facebook has been unblocked."
-        fi
+        # fi
     else # Block Facebook
         sudo cp /etc/hosts /etc/hosts-fb
         sudo sh -c 'echo "127.0.0.1 facebook.com" >> /etc/hosts'

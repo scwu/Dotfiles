@@ -1,0 +1,182 @@
+#!/bin/bash
+# WORKS ONL WITH RIGHT LEFT CONFIG, VGA ON LEFT, LDVS1 ON RIGHT
+# and top down config, top vga, lvds bot
+# partially taken from http://crunchbang.org/forums/viewtopic.php?id=15002
+#############################################   CONFIGURATION   #############################################
+
+PANEL_L=$((0))         # If panel is on the LEFT of the screen, set its height here. If there's no panel there, set it to 0.
+PANEL_R=$((0))         # If panel is on the RIGHT of the screen, set its height here. If there's no panel there, set it to 0.
+PANEL_T=$((0))         # If panel is on the TOP of the screen, set its height here. If there's no panel there, set it to 0.
+PANEL_B=$((40))         # If panel is on the BOTTOM of the screen, set its height here. If there's no panel there, set it to 0.
+WINDOW_BORDER=$((1))      # Set the window border according to the theme. If there's no window border, set it to 0.
+WINDOW_DECORATION=$((10)) # Set the window decoration border according to the theme. If there's no decoration, set it to 0.
+
+#############################################  /CONFIGURATION   #############################################
+
+# Print help:
+printUsage ()
+{
+  echo -e "Invalid command line argument(s)!\nUsage:\n"
+  echo -e "`basename "$0"` [options]\n"
+  echo -e "Options:\n"
+  echo -e "-l  | --left    \tPut the window to the left"
+  echo -e "-r  | --right    \tPut the window to the right"
+  echo -e "-t  | --top    \tPut the window to the top"
+  echo -e "-tl | --top-left\tPut the window to the top-left corner"
+  echo -e "-tr | --top-right\tPut the window to the top-right corner"
+  echo -e "-bl | --bottom-left\tPut the window to the bottom left corner"
+  echo -e "-br | --bottom-right\tPut the window to the bottom right corner"
+  echo -e " "
+  echo -e "Win_tile 0.2b by Slug.45 2011"
+  exit 1
+}
+
+xrandr=`xrandr --query`
+
+# Get Screen resolution:
+# RES_Y=`xwininfo -root | grep Height | awk '{ print (($2))}'`
+RES_X_VGA=`echo "$xrandr" | ack --match 'VGA1[^\n]*\n[\s]*' -A 1 | ack --match '([\d]{4})x([\d]{3,4})[^\n]*[+]$' --output '$1'`
+RES_X_LVDS=`echo "$xrandr" | ack --match 'LVDS1[^\n]*\n[\s]*' -A 1 | ack --match '([\d]{4})x([\d]{3,4})[^\n]*[+]$' --output '$1'`
+
+# RES_X=`xwininfo -root | grep Width | awk '{ print (($2))}'`
+RES_Y_VGA=`echo "$xrandr" | ack --match 'VGA1[^\n]*\n[\s]*' -A 1 | ack --match '([\d]{4})x([\d]{3,4})[^\n]*[+]$' --output '$2'`
+RES_Y_LVDS=`echo "$xrandr" | ack --match 'LVDS1[^\n]*\n[\s]*' -A 1 | ack --match '([\d]{4})x([\d]{3,4})[^\n]*[+]$' --output '$2'`
+
+MOUSE_X=`xdotool getmouselocation 2>&1 |sed -rn '${s/x:([0-9]+) y:([0-9]+) .*/\1 \2/p}' | ack --match '([\d]{1,4})[\s]*([\d]{1,4})' --output '$1'`
+MOUSE_Y=`xdotool getmouselocation 2>&1 |sed -rn '${s/x:([0-9]+) y:([0-9]+) .*/\1 \2/p}' | ack --match '([\d]{1,4})[\s]*([\d]{1,4})' --output '$2'`
+
+# Functions:
+## LEFT
+if [ "$#" == "1" ]; then
+  # echo $MOUSE_X
+  # echo $MOUSE_Y
+  # echo $RES_X_VGA 
+  # echo $RES_Y_VGA 
+  # echo $RES_X_LVDS 
+  # echo $RES_Y_LVDS
+  if [ -z "$RES_X_VGA" ]; then
+    RES_Y=$RES_Y_LVDS
+    RES_X=$RES_X_LVDS
+  else 
+    # if it's on the right side, its lvsd
+    # TODO: fix top/bot config
+    # echo $MOUSE_X
+    # echo $RES_X_VGA 
+    if [ $MOUSE_X -gt $RES_X_VGA ]; then
+      RES_Y=$RES_Y_LVDS
+      RES_X=$RES_X_LVDS
+      # if top bottom config
+      if [ $MOUSE_Y -gt $RES_Y_VGA ]; then
+        PANEL_T=`expr $PANEL_T + $RES_Y_VGA`
+      else
+        PANEL_L=`expr $PANEL_L + $RES_X_VGA`
+      fi
+    else
+      RES_Y=$RES_Y_VGA
+      RES_X=$RES_X_VGA
+    fi
+  fi
+  echo $PANEL_L
+  case "$1" in
+    "-l" | "--left")
+      POS_X=$((PANEL_L))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X/2-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y-PANEL_T-PANEL_B-WINDOW_DECORATION))
+      # echo 'hi'
+      # echo $SIZE_X
+      # echo $SIZE_Y
+      # echo $POS_X
+      # echo $POS_Y
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      # echo 'y'
+      exit 0
+      ;;
+      ## RIGHT
+      "-r" | "--right")
+      POS_X=$((RES_X/2 + PANEL_L))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X/2-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y-PANEL_T-PANEL_B-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      ;;
+      ## TOP LEFT
+      "-tl" | "--top-left")
+      POS_X=$((PANEL_L))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X/2-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## TOP RIGHT
+      "-tr" | "--top-right")
+      POS_X=$((RES_X/2))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X/2--WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## BOTTOM LEFT
+      "-bl" | "--bottom-left")
+      POS_X=$((PANEL_L))
+      POS_Y=$((RES_Y/2+PANEL_T/2-PANEL_B/2))
+      SIZE_X=$((RES_X/2--WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## BOTOM RIGHT
+      "-br" | "--bottom-right")
+      POS_X=$((RES_X/2))
+      POS_Y=$((RES_Y/2+PANEL_T/2-PANEL_B/2))
+      SIZE_X=$((RES_X/2-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## TOP
+      "-t" | "--top")
+      POS_X=$((PANEL_L))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## BOTTOM 
+      "-b" | "--bottom")
+      POS_X=$((PANEL_L))
+      POS_Y=$((RES_Y/2+PANEL_T/2-PANEL_B/2))
+      SIZE_X=$((RES_X-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y/2-PANEL_T/2-PANEL_B/2-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+      ## MAX 
+      "-m" | "--maximize")
+      POS_X=$((PANEL_L))
+      POS_Y=$((PANEL_T))
+      SIZE_X=$((RES_X-WINDOW_BORDER))
+      SIZE_Y=$((RES_Y-PANEL_T-PANEL_B-WINDOW_DECORATION))
+      wmctrl -r :ACTIVE: -e 0,$POS_X,$POS_Y,$SIZE_X,$SIZE_Y
+      exit 0
+      exit 0
+      ;;
+    *)
+      printUsage
+      exit 1
+      ;;
+  esac
+else
+  printUsage
+  exit 1
+fi
