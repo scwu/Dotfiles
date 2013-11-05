@@ -1,0 +1,9 @@
+[user]
+	name = Clara Wu
+	email = s.clara.wu@gmail.com
+[credential]
+	helper = cache
+[color]
+	ui = true
+[push]
+	default = simple
