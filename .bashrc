@@ -1,3 +1,4 @@
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
         export TERM=xterm-256color
 else export TERM=xterm-color
@@ -105,3 +106,10 @@ for f in $(command ls ~/.node-completion); do
   test -f "$f" && . "$f"
 done
 # }}}
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib/
+
+export PATH="/usr/local/share/npm/bin:${PATH}"

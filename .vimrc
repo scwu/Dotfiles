@@ -7,7 +7,6 @@ set shell=/bin/sh
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-Bundle 'fu'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
@@ -123,7 +122,7 @@ set foldcolumn=1
 
 if &term!="xterm"
   set t_Co=256            " use 256 colors in vim
-  colorscheme fu   " an appropriate color scheme
+  colorscheme wombat   " an appropriate color scheme
 endif
 
 syntax enable
