@@ -1,3 +1,4 @@
+Clara Wu (scwu) dot files
 # dotfiles 
 
 My collection of configs for:
